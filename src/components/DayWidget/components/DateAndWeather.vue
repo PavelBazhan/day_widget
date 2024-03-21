@@ -12,12 +12,13 @@ const props = defineProps({
     <div class="date-block">
       {{ todayString }}
     </div>
-    <!-- <div class="weather-block">
-
+    <div class="weather-block">
+      погода
     </div>
-    <div class="weather-forecast-block">
-
-    </div> -->
+    <div class="weather-forecast-block weather-forecast-block_cold">
+      <span>завтра будет прохладнее</span>
+      <span v-show="false">завтра будет теплее</span>
+    </div>
   </div>
 </template>
 
@@ -26,7 +27,7 @@ const props = defineProps({
   width: 100%;
   border-radius: 12px;
   background: #3C4C5299;
-  padding: 12px;
+  padding: 16px 0;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
@@ -38,5 +39,24 @@ const props = defineProps({
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 500;
+  min-height: 58px;
+}
+.weather-block {
+  height: 136px;
+  background-color: #22343A99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ECFEFF33;
+}
+.weather-forecast-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 19px;
+  &_cold {
+    color: #9AC8EA;
+  }
 }
 </style>
