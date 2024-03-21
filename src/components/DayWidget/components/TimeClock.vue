@@ -31,7 +31,12 @@ const getTwoSymbolsValue = (value) => {
 <template>
   <div class="day-widget-clock">
     <div class="day-widget-clock__block day-widget-clock__block_hours">{{ getTwoSymbolsValue(hours) }}</div>
+    <div class="day-widget-clock__divider">
+      <div class="day-widget-clock__divider__circle"></div>
+      <div class="day-widget-clock__divider__circle"></div>
+    </div>
     <div class="day-widget-clock__block day-widget-clock__block_minutes">{{ getTwoSymbolsValue(minutes) }}</div>
+    <div class="day-widget-clock__divider" v-show="showSeconds" />
     <div class="day-widget-clock__block day-widget-clock__block_seconds" v-show="showSeconds">{{ getTwoSymbolsValue(seconds) }}</div>
   </div>
 </template>
@@ -41,7 +46,8 @@ const getTwoSymbolsValue = (value) => {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
   font-size: 36px;
   &__block {
     flex: 1 1 0;
@@ -53,6 +59,17 @@ const getTwoSymbolsValue = (value) => {
     background: #3C4C5299;
     font-weight: 700;
     font-size: 80px;
+  }
+  &__divider {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 16px;
+    &__circle {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ECFEFF;
+    }
   }
 }
 </style>

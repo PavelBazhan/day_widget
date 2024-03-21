@@ -1,4 +1,6 @@
 <script setup>
+import WeatherBlock from './WeatherBlock.vue';
+
 const props = defineProps({
   todayString: {
     type: String,
@@ -12,8 +14,12 @@ const props = defineProps({
     <div class="date-block">
       {{ todayString }}
     </div>
-    <div class="weather-block">
-      погода
+    <div class="weather-block-wrapper">
+      <WeatherBlock
+        v-for="n in 3"
+        :key="n"
+        :big="n === 2"
+      />
     </div>
     <div class="weather-forecast-block weather-forecast-block_cold">
       <span>завтра будет прохладнее</span>
@@ -42,13 +48,13 @@ const props = defineProps({
   font-weight: 500;
   min-height: 58px;
 }
-.weather-block {
+.weather-block-wrapper {
   height: 136px;
   background-color: #22343A99;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #ECFEFF33;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 8px 24px;
 }
 .weather-forecast-block {
   display: flex;

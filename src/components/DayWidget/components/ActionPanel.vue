@@ -3,23 +3,23 @@ import WidgetActionButton from './WidgetActionButton.vue';
 
 const actionButtonList = [
   {
-    icon: 'icon_code',
+    icon: 'calendar',
     action: () => {},
   },
   {
-    icon: 'icon_code',
+    icon: 'message',
     action: () => {},
   },
   {
-    icon: 'icon_code',
+    icon: 'post',
     action: () => {},
   },
   {
-    icon: 'icon_code',
+    icon: 'search',
     action: () => {},
   },
   {
-    icon: 'icon_code',
+    icon: 'notes',
     action: () => {},
   },
 ];
@@ -31,6 +31,7 @@ const actionButtonList = [
       class="action-button"
       v-for="(actionButton, index) in actionButtonList"
       :key="index"
+      :icon="actionButton.icon"
     />
   </div>
 </template>
