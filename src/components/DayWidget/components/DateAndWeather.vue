@@ -1,5 +1,6 @@
 <script setup>
-import WeatherBlock from './WeatherBlock.vue';
+import WeatherBlock from './WeatherBlock/WeatherBlock.vue';
+import WEATHER_BLOCK_CONSTANTS from './WeatherBlock/constants.js';
 
 const props = defineProps({
   todayString: {
@@ -19,6 +20,8 @@ const props = defineProps({
         v-for="n in 3"
         :key="n"
         :big="n === 2"
+        :day-time="WEATHER_BLOCK_CONSTANTS.DAY_TIME[Math.floor(Math.random() * 4)]._code"
+        :temperature-value="Math.floor(Math.random() * 51) - 26"
       />
     </div>
     <div class="weather-forecast-block weather-forecast-block_cold">

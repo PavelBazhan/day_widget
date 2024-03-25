@@ -1,11 +1,56 @@
 <script setup>
-import weatherRainyUrl from '../../../assets/weather_rainy.svg';
+import { computed } from 'vue';
+import LOCAL_CONSTANTS from './constants.js';
 
-defineProps({
+const props = defineProps({
   big: {
     type: Boolean,
     default: false,
   },
+  dayTime: {
+    type: String,
+    default: null,
+  },
+  temperatureValue: {
+    type: Number,
+    default: null,
+  },
+  temperatureUnit: {
+    type: String,
+    default: LOCAL_CONSTANTS.TEMPERATURE_UNIT.CELSIUS,
+  },
+  weatherType: {
+    type: String,
+    default: null,
+  },
+});
+
+const dayTimeLocaleString = computed(() => {
+  if (!props.dayTime) {
+    return null;
+  }
+  const foundDayTimeObject = LOCAL_CONSTANTS.DAY_TIME.find((dt) => dt._code === props.dayTime);
+  if (!foundDayTimeObject) {
+    return null;
+  }
+  return foundDayTimeObject.localeValues[1]; // <- need to fix that stuff
+});
+
+const weatherTypeImgUrl = computed(() => {
+  if (!props.weatherType) {
+    return null;
+  }
+
+
+  const cloudyLowArray = [ 'cloudy-low' ];
+  const cloudyArray = [ 'cloudy' ];
+  const rainyArray = [ 'rainy' ];
+  const snowyArray = [ 'snowy' ];
+  const sunnyArray = [ 'sunny' ];
+
+  if (true) {
+    return;
+  }
 });
 </script>
 
@@ -17,12 +62,12 @@ defineProps({
     }"
   >
     <div class="weather-block__top">
-      <div class="weather-block__label">утро</div>
-      <div class="weather-block__temperature">13°C</div>
+      <div class="weather-block__label">{{ dayTimeLocaleString }}</div>
+      <div class="weather-block__temperature">{{ temperatureValue }}°C</div>
     </div>
     <div class="weather-block__bottom">
       <div class="weather-block__icon-wrapper">
-        <img :src="weatherRainyUrl" />
+        <img :src="weatherTypeImgUrl" />
       </div>
     </div>
   </div>
