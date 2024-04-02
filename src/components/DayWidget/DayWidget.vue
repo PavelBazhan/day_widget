@@ -1,5 +1,6 @@
 <script setup>
 import { reactive } from 'vue';
+import axios from 'axios';
 import TimeClock from './components/TimeClock.vue';
 import DateAndWeather from './components/DateAndWeather.vue';
 import Dictionary from './components/Dictionary.vue';
@@ -10,10 +11,25 @@ const generalTimerData = reactive({
   minutes: null,
   seconds: null,
   todayString: null,
+  forecast: null,
   tickAmount: 0,
 });
 
-const generalTimerTickhandler = (log) => {
+const refreshForecastInfo = async () => {
+  try {
+    const forecastResponse = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=55.7522&longitude=37.6156&hourly=temperature_2m,weather_code&past_days=1&forecast_days=2&timezone=auto');
+    if (forecastResponse.status === 200) {
+      generalTimerData.forecast = forecastResponse.data;
+      
+      console.log(JSON.parse(JSON.stringify(generalTimerData.forecast)));
+
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const generalTimerTickHandler = async (log) => {
   const date = new Date();
   
   generalTimerData.hours = date.getHours();
@@ -23,6 +39,12 @@ const generalTimerTickhandler = (log) => {
     month: "long",
     day: "numeric",
   });
+
+  // Getting forecast
+  if (generalTimerData.tickAmount === 0 || (generalTimerData.tickAmount % (4 * 60)) === 0) { 
+    // ticks every minute
+    refreshForecastInfo();
+  }
 
   if (log) {
     console.log(date.toLocaleString('ru', {
@@ -38,7 +60,7 @@ const generalTimerTickhandler = (log) => {
 
 const runGeneralTimer = () => {
   setInterval(() => {
-    generalTimerTickhandler();
+    generalTimerTickHandler();
     generalTimerData.tickAmount++;
   }, 250);
 };
@@ -62,7 +84,7 @@ runGeneralTimer();
     <Dictionary />
     <ActionPanel />
 
-    <!-- <button @click="generalTimerTickhandler(true)">tick</button> -->
+    <!-- <button @click="generalTimerTickHandler(true)">tick</button> -->
   </div>
 </template>
 
@@ -81,9 +103,5 @@ runGeneralTimer();
   flex-flow: column nowrap;
   align-items: stretch;
   gap: 8px;
-  // &__clock,
-  // &__date-and-weather {
-  //   margin-bottom: 8px;
-  // }
 }
 </style>

@@ -19,8 +19,8 @@ const props = defineProps({
     type: String,
     default: LOCAL_CONSTANTS.TEMPERATURE_UNIT.CELSIUS,
   },
-  weatherType: {
-    type: String,
+  weatherCode: {
+    type: Number,
     default: null,
   },
 });
@@ -37,20 +37,15 @@ const dayTimeLocaleString = computed(() => {
 });
 
 const weatherTypeImgUrl = computed(() => {
-  if (!props.weatherType) {
+  if (typeof props.weatherCode !== 'number') {
     return null;
   }
 
+  const weatherTypeObject = LOCAL_CONSTANTS.WEATHER_TYPE.find((wt) => {
+    return wt.appropriateWeatherTypeCodeList.some((wtc) => wtc === props.weatherCode);
+  });
 
-  const cloudyLowArray = [ 'cloudy-low' ];
-  const cloudyArray = [ 'cloudy' ];
-  const rainyArray = [ 'rainy' ];
-  const snowyArray = [ 'snowy' ];
-  const sunnyArray = [ 'sunny' ];
-
-  if (true) {
-    return;
-  }
+  return weatherTypeObject?.url || null;
 });
 </script>
 

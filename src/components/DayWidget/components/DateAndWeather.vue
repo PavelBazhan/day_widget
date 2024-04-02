@@ -22,6 +22,7 @@ const props = defineProps({
         :big="n === 2"
         :day-time="WEATHER_BLOCK_CONSTANTS.DAY_TIME[Math.floor(Math.random() * 4)]._code"
         :temperature-value="Math.floor(Math.random() * 51) - 26"
+        :weather-code="73"
       />
     </div>
     <div class="weather-forecast-block weather-forecast-block_cold">
