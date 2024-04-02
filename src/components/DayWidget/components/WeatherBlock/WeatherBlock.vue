@@ -47,6 +47,8 @@ const weatherTypeImgUrl = computed(() => {
 
   return weatherTypeObject?.url || null;
 });
+
+const temperatureValueIsValid = computed(() => typeof props.temperatureValue === 'number');
 </script>
 
 <template>
@@ -58,11 +60,11 @@ const weatherTypeImgUrl = computed(() => {
   >
     <div class="weather-block__top">
       <div class="weather-block__label">{{ dayTimeLocaleString }}</div>
-      <div class="weather-block__temperature">{{ temperatureValue }}°C</div>
+      <div class="weather-block__temperature" v-show="temperatureValueIsValid">{{ temperatureValue }}°C</div>
     </div>
     <div class="weather-block__bottom">
       <div class="weather-block__icon-wrapper">
-        <img :src="weatherTypeImgUrl" />
+        <img :src="weatherTypeImgUrl" v-show="weatherCode" />
       </div>
     </div>
   </div>
@@ -82,6 +84,7 @@ const weatherTypeImgUrl = computed(() => {
     gap: 4px;
   }
   &__label {
+    min-height: 18px;
     font-size: 14px;
     line-height: 18px;
     font-weight: 100;

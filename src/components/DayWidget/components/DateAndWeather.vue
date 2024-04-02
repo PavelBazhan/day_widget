@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import WeatherBlock from './WeatherBlock/WeatherBlock.vue';
 import WEATHER_BLOCK_CONSTANTS from './WeatherBlock/constants.js';
 
@@ -7,7 +8,36 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  weather: {
+    type: Array,
+    default: null,
+  },
 });
+
+const slicedWeather = computed(() => {
+  if (!Array.isArray(props.weather)) {
+    return null;
+  }
+  return props.weather.slice(0, -1);
+});
+
+const tomorrowInfo = computed(() => {
+  if (!Array.isArray(props.weather)) {
+    return null;
+  }
+  return props.weather[3];
+});
+
+const tomorrowWillBeColder = computed(() => {
+  const temperatureNow = props.weather[1].temperature;
+  const temperatureTomorrow = tomorrowInfo.value?.temperature;
+  return temperatureNow > temperatureTomorrow;
+});
+
+const weatherForecastBlockComputedClass = computed(() => ({
+  'weather-forecast-block_cold': tomorrowWillBeColder.value,
+  'weather-forecast-block_warm': !tomorrowWillBeColder.value,
+}));
 </script>
 
 <template>
@@ -16,18 +46,24 @@ const props = defineProps({
       {{ todayString }}
     </div>
     <div class="weather-block-wrapper">
-      <WeatherBlock
-        v-for="n in 3"
-        :key="n"
-        :big="n === 2"
-        :day-time="WEATHER_BLOCK_CONSTANTS.DAY_TIME[Math.floor(Math.random() * 4)]._code"
-        :temperature-value="Math.floor(Math.random() * 51) - 26"
-        :weather-code="73"
-      />
+      <template v-if="weather">
+        <WeatherBlock
+          v-for="(weatherBlock, index) in slicedWeather"
+          :key="index"
+          :big="index === 1"
+          :day-time="weatherBlock?.dayTimeCode"
+          :temperature-value="weatherBlock?.temperature"
+          :weather-code="weatherBlock?.weatherCode"
+        />
+      </template>
     </div>
-    <div class="weather-forecast-block weather-forecast-block_cold">
-      <span>завтра будет прохладнее</span>
-      <span v-show="false">завтра будет теплее</span>
+    <div
+      class="weather-forecast-block"
+      :class="weatherForecastBlockComputedClass"
+      v-if="tomorrowInfo"
+    >
+      <span v-show="tomorrowWillBeColder">завтра будет прохладнее</span>
+      <span v-show="!tomorrowWillBeColder">завтра будет теплее</span>
     </div>
   </div>
 </template>
@@ -67,6 +103,9 @@ const props = defineProps({
   min-height: 19px;
   &_cold {
     color: #9AC8EA;
+  }
+  &_warm {
+    color: #F6D972;
   }
 }
 </style>

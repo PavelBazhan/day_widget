@@ -13,18 +13,22 @@ export default {
     {
       _code: 'MORNING',
       localeValues: [ 'morning', 'утро', ],
+      hours: [ 6, 11  ],
     },
     {
       _code: 'AFTERNOON',
       localeValues: [ 'afternoon', 'день', ],
+      hours: [ 12, 17, ],
     },
     {
       _code: 'EVENING',
       localeValues: [ 'evening', 'вечер', ],
+      hours: [ 18, 23, ],
     },
     {
       _code: 'NIGHT',
       localeValues: [ 'night', 'ночь', ],
+      hours: [ 0, 5, ],
     },
   ],
   WEATHER_TYPE: [
