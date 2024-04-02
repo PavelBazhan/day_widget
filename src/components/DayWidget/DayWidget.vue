@@ -15,6 +15,7 @@ const generalTimerData = reactive({
   todayString: null,
   forecast: null,
   weather: [ null, null, null, ],
+  connectionError: false,
   tickAmount: 0,
 });
 
@@ -36,90 +37,111 @@ const getDayTimeCodeByHours = (sourceHours) => {
 };
 
 const refreshForecastInfo = async () => {
-  try {
-    const forecastResponse = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=55.7522&longitude=37.6156&hourly=temperature_2m,weather_code&past_days=1&forecast_days=2&timezone=auto');
-    if (forecastResponse.status === 200) {
-      generalTimerData.forecast = forecastResponse.data;
-
-      console.log(JSON.parse(JSON.stringify(generalTimerData)));
-      console.log(JSON.parse(JSON.stringify(generalTimerData.forecast)));
-
-      const gmtYear = generalTimerData.jsDate.getFullYear();
-      const gmtMonth = String(generalTimerData.jsDate.getMonth() + 1).padStart(2, '0');
-      const gmtDate = String(generalTimerData.jsDate.getDate()).padStart(2, '0');
-
-      const forecastDateTimeString = `${[ gmtYear, gmtMonth, gmtDate ].join('-')}T${generalTimerData.hours}:00`;
-      
-      const apiHourlyTime = generalTimerData.forecast.hourly?.time;
-      if (!Array.isArray(apiHourlyTime)) {
-        return;
-      }
-      const currentHourlyTimeIndex = apiHourlyTime.findIndex((ht) => ht === forecastDateTimeString);
-      if (currentHourlyTimeIndex === -1) {
-        return;
-      }
-      const apiHourlyTemperature = generalTimerData.forecast.hourly?.temperature_2m;
-      const apiHourlyWeatherCode = generalTimerData.forecast.hourly?.weather_code;
-      if (!Array.isArray(apiHourlyTemperature) || !Array.isArray(apiHourlyWeatherCode)) {
-        return;
-      }
-      const currentHourlyTemperature = Math.round(apiHourlyTemperature[currentHourlyTimeIndex]);
-      const currentHourlyWeatherCode = apiHourlyWeatherCode[currentHourlyTimeIndex];
-
-      generalTimerData.weather.splice(1, 1, {
-        temperature: currentHourlyTemperature,
-        weatherCode: currentHourlyWeatherCode,
-        dayTimeCode: getDayTimeCodeByHours(generalTimerData.hours),
-      });
-
-      // PREV block below
-      const prevHourlyTimeIndex = currentHourlyTimeIndex - 6;
-      if (prevHourlyTimeIndex < 0) {
-        return;
-      }
-      const prevHourlyTemperature = Math.round(apiHourlyTemperature[prevHourlyTimeIndex]);
-      const prevHourlyWeatherCode = apiHourlyWeatherCode[prevHourlyTimeIndex];
-      generalTimerData.weather.splice(0, 1, {
-        temperature: prevHourlyTemperature,
-        weatherCode: prevHourlyWeatherCode,
-        dayTimeCode: getDayTimeCodeByHours(generalTimerData.hours - 6),
-      });
-
-      // NEXT block below
-      const nextHourlyTimeIndex = currentHourlyTimeIndex + 6;
-      if (nextHourlyTimeIndex > 71) {
-        return;
-      }
-      const nextHourlyTemperature = Math.round(apiHourlyTemperature[nextHourlyTimeIndex]);
-      const nextHourlyWeatherCode = apiHourlyWeatherCode[nextHourlyTimeIndex];
-      generalTimerData.weather.splice(2, 1, {
-        temperature: nextHourlyTemperature,
-        weatherCode: nextHourlyWeatherCode,
-        dayTimeCode: getDayTimeCodeByHours(generalTimerData.hours + 6),
-      });
-
-      // TOMORROW block below
-      const tomorrowHourlyTimeIndex = currentHourlyTimeIndex + 24;
-      if (!apiHourlyTemperature[tomorrowHourlyTimeIndex]) {
-        return;
-      }
-      const tomorrowHourlyTemperature = Math.round(apiHourlyTemperature[tomorrowHourlyTimeIndex]);
-      const tomorrowHourlyWeatherCode = apiHourlyWeatherCode[tomorrowHourlyTimeIndex];
-      generalTimerData.weather.splice(3, 1, {
-        temperature: tomorrowHourlyTemperature,
-        weatherCode: tomorrowHourlyWeatherCode,
-        dayTimeCode: getDayTimeCodeByHours(generalTimerData.hours),
-      });
-
-      console.log('weather: ', generalTimerData.weather);
-
-    }
-  } catch (error) {
-    throw error;
+  if (!navigator.geolocation) {
+    return null;
   }
+
+  const getDataFromApi = async (position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    try {
+      const forecastApiRequest = {
+        params: {
+          latitude,
+          longitude,
+          hourly: 'temperature_2m,weather_code',
+          past_days: '1',
+          forecast_days: '2',
+          timezone: 'auto',
+        },
+      };
+      const forecastResponse = await axios.get('https://api.open-meteo.com/v1/forecast', forecastApiRequest);
+      if (forecastResponse.status === 200) {
+        generalTimerData.connectionError = false;
+        generalTimerData.forecast = forecastResponse.data;
+
+        const gmtYear = generalTimerData.jsDate.getFullYear();
+        const gmtMonth = String(generalTimerData.jsDate.getMonth() + 1).padStart(2, '0');
+        const gmtDate = String(generalTimerData.jsDate.getDate()).padStart(2, '0');
+
+        const forecastDateTimeString = `${[ gmtYear, gmtMonth, gmtDate ].join('-')}T${generalTimerData.hours}:00`;
+        
+        const apiHourlyTime = generalTimerData.forecast.hourly?.time;
+        if (!Array.isArray(apiHourlyTime)) {
+          return;
+        }
+        const currentHourlyTimeIndex = apiHourlyTime.findIndex((ht) => ht === forecastDateTimeString);
+        if (currentHourlyTimeIndex === -1) {
+          return;
+        }
+        const apiHourlyTemperature = generalTimerData.forecast.hourly?.temperature_2m;
+        const apiHourlyWeatherCode = generalTimerData.forecast.hourly?.weather_code;
+        if (!Array.isArray(apiHourlyTemperature) || !Array.isArray(apiHourlyWeatherCode)) {
+          return;
+        }
+        const currentHourlyTemperature = Math.round(apiHourlyTemperature[currentHourlyTimeIndex]);
+        const currentHourlyWeatherCode = apiHourlyWeatherCode[currentHourlyTimeIndex];
+
+        generalTimerData.weather.splice(1, 1, {
+          temperature: currentHourlyTemperature,
+          weatherCode: currentHourlyWeatherCode,
+          dayTimeCode: getDayTimeCodeByHours(generalTimerData.hours),
+        });
+
+        // PREV block below
+        const prevHourlyTimeIndex = currentHourlyTimeIndex - 6;
+        if (prevHourlyTimeIndex < 0) {
+          return;
+        }
+        const prevHourlyTemperature = Math.round(apiHourlyTemperature[prevHourlyTimeIndex]);
+        const prevHourlyWeatherCode = apiHourlyWeatherCode[prevHourlyTimeIndex];
+        generalTimerData.weather.splice(0, 1, {
+          temperature: prevHourlyTemperature,
+          weatherCode: prevHourlyWeatherCode,
+          dayTimeCode: getDayTimeCodeByHours(generalTimerData.hours - 6),
+        });
+
+        // NEXT block below
+        const nextHourlyTimeIndex = currentHourlyTimeIndex + 6;
+        if (nextHourlyTimeIndex > 71) {
+          return;
+        }
+        const nextHourlyTemperature = Math.round(apiHourlyTemperature[nextHourlyTimeIndex]);
+        const nextHourlyWeatherCode = apiHourlyWeatherCode[nextHourlyTimeIndex];
+        generalTimerData.weather.splice(2, 1, {
+          temperature: nextHourlyTemperature,
+          weatherCode: nextHourlyWeatherCode,
+          dayTimeCode: getDayTimeCodeByHours(generalTimerData.hours + 6),
+        });
+
+        // TOMORROW block below
+        const tomorrowHourlyTimeIndex = currentHourlyTimeIndex + 24;
+        if (!apiHourlyTemperature[tomorrowHourlyTimeIndex]) {
+          return;
+        }
+        const tomorrowHourlyTemperature = Math.round(apiHourlyTemperature[tomorrowHourlyTimeIndex]);
+        const tomorrowHourlyWeatherCode = apiHourlyWeatherCode[tomorrowHourlyTimeIndex];
+        generalTimerData.weather.splice(3, 1, {
+          temperature: tomorrowHourlyTemperature,
+          weatherCode: tomorrowHourlyWeatherCode,
+          dayTimeCode: getDayTimeCodeByHours(generalTimerData.hours),
+        });
+
+      }
+    } catch (error) {
+      generalTimerData.connectionError = true;
+      throw error;
+    }
+  };
+
+  navigator.geolocation.getCurrentPosition(getDataFromApi, ((error) => {
+    generalTimerData.connectionError = true;
+    throw error;
+  })); 
 };
 
-const generalTimerTickHandler = async (log) => {
+const generalTimerTickHandler = (log) => {
   const date = new Date();
   
   generalTimerData.jsDate = date;
@@ -132,7 +154,8 @@ const generalTimerTickHandler = async (log) => {
   });
 
   // Getting forecast
-  if (generalTimerData.tickAmount === 0 || (generalTimerData.tickAmount % (4 * 60)) === 0) { 
+  if (generalTimerData.tickAmount === 0 || (generalTimerData.tickAmount % (4 * 60)) === 0) {
+    console.log('Public Forecast Api Request Tick');
     // ticks every minute
     refreshForecastInfo();
   }
@@ -171,6 +194,7 @@ runGeneralTimer();
     <DateAndWeather
       class="day-widget__date-and-weather"
       :todayString="generalTimerData.todayString"
+      :connectionError="generalTimerData.connectionError"
       :weather="generalTimerData.weather"
     />
     <Dictionary />

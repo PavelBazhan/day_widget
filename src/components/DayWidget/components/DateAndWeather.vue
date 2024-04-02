@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue';
 import WeatherBlock from './WeatherBlock/WeatherBlock.vue';
-import WEATHER_BLOCK_CONSTANTS from './WeatherBlock/constants.js';
 
 const props = defineProps({
   todayString: {
@@ -11,6 +10,10 @@ const props = defineProps({
   weather: {
     type: Array,
     default: null,
+  },
+  connectionError: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -29,14 +32,14 @@ const tomorrowInfo = computed(() => {
 });
 
 const tomorrowWillBeColder = computed(() => {
-  const temperatureNow = props.weather[1].temperature;
+  const temperatureNow = props.weather[1]?.temperature;
   const temperatureTomorrow = tomorrowInfo.value?.temperature;
   return temperatureNow > temperatureTomorrow;
 });
 
 const weatherForecastBlockComputedClass = computed(() => ({
-  'weather-forecast-block_cold': tomorrowWillBeColder.value,
-  'weather-forecast-block_warm': !tomorrowWillBeColder.value,
+  'weather-forecast-block_cold': tomorrowWillBeColder?.value,
+  'weather-forecast-block_warm': !tomorrowWillBeColder?.value,
 }));
 </script>
 
@@ -45,7 +48,7 @@ const weatherForecastBlockComputedClass = computed(() => ({
     <div class="date-block">
       {{ todayString }}
     </div>
-    <div class="weather-block-wrapper">
+    <div class="weather-block-wrapper" v-if="!connectionError">
       <template v-if="weather">
         <WeatherBlock
           v-for="(weatherBlock, index) in slicedWeather"
@@ -57,13 +60,17 @@ const weatherForecastBlockComputedClass = computed(() => ({
         />
       </template>
     </div>
+    <div class="weather-block-error" v-else>
+      <span>Connection Error</span>
+    </div>
     <div
       class="weather-forecast-block"
       :class="weatherForecastBlockComputedClass"
-      v-if="tomorrowInfo"
     >
-      <span v-show="tomorrowWillBeColder">завтра будет прохладнее</span>
-      <span v-show="!tomorrowWillBeColder">завтра будет теплее</span>
+      <template v-if="tomorrowInfo">
+        <span v-show="tomorrowWillBeColder">завтра будет прохладнее</span>
+        <span v-show="!tomorrowWillBeColder">завтра будет теплее</span>
+      </template>
     </div>
   </div>
 </template>
@@ -88,13 +95,21 @@ const weatherForecastBlockComputedClass = computed(() => ({
   font-weight: 500;
   min-height: 58px;
 }
-.weather-block-wrapper {
+.weather-block-wrapper,
+.weather-block-error {
   height: 136px;
   background-color: #22343A99;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   padding: 8px 24px;
+}
+.weather-block-error  {
+  justify-content: center;
+  align-items: center;
+  & > span {
+    opacity: 0.5;
+  }
 }
 .weather-forecast-block {
   display: flex;
