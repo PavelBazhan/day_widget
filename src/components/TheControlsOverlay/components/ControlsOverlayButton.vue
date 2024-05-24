@@ -30,9 +30,11 @@ const computedControlsOverlayButtonClass = computed(() => ({
   border: none;
   font-size: 16px;
   color: var(--color_content);
-  padding: 4px 8px;
+  padding: 0;
   font-size: 14px;
   line-height: 18px;
+  text-decoration: underline;
+  transition: color 0.05s;
 
   &:hover {
     cursor: pointer;
@@ -46,7 +48,7 @@ const computedControlsOverlayButtonClass = computed(() => ({
   }
 
   &_selected {
-    text-decoration: underline;
+    text-decoration: none;
   }
 }
 </style>

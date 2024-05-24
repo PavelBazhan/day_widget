@@ -25,36 +25,32 @@ const setDayWidgetTheme = (theme) => {
   <div class="controls-overlay">
     <div class="controls-overlay__background">
       <div class="controls-overlay__author-block">
-        <div class="person-link">
-          <div class="person-link__title">Разработка:</div>
+        <div class="c-block">
+          <div class="c-block__title">Разработка:</div>
           <div>
             <a target="_blank" href="https://github.com/PavelBazhan/">Павел Бажан</a>
           </div>
         </div>
-        <div class="person-link">
-          <div class="person-link__title">Дизайн:</div>
+        <div class="c-block">
+          <div class="c-block__title">Дизайн:</div>
           <div>
             <a target="_blank" href="https://nataliia-shishkina.ru/">Наталия Шишкина</a>
           </div>
         </div>
       </div>
       <div class="controls-overlay__controls-block">
-        <div class="language-controls mr-8">
-          <div class="language-controls__title">
-            <span>Язык</span>
-          </div>
-          <div class="language-controls__buttons">
-            <ControlsOverlayButton :selected="true" :disabled="true" @click="setLanguage('ruRU')">Ру</ControlsOverlayButton>
+        <div class="c-block">
+          <div class="c-block__title">Тема:</div>
+          <div>
+            <ControlsOverlayButton class="mr-1" :selected="true" :disabled="true" @click="setLanguage('ruRU')">Ру</ControlsOverlayButton>
             <ControlsOverlayButton @click="setLanguage('enUS')">Англ</ControlsOverlayButton>
           </div>
         </div>
-        <div class="theme-controls">
-          <div class="theme-controls__title">
-            <span>Тема</span>
-          </div>
-          <div class="theme-controls__buttons">
-            <!-- <ControlsOverlayButton :selected="true" :disabled="true" @click="setDayWidgetTheme('DARK')">Темная</ControlsOverlayButton> -->
+        <div class="c-block">
+          <div class="c-block__title">Язык:</div>
+          <div>
             <ControlsOverlayButton
+              class="mr-1"
               :selected="themeIsSelected('DARK')"
               :disabled="themeIsSelected('DARK')"
               @click="setDayWidgetTheme('DARK')"
@@ -98,10 +94,11 @@ const setDayWidgetTheme = (theme) => {
     line-height: 18px;
   }
   &__controls-block {
-    display: flex;
+    font-size: 14px;
+    line-height: 18px;
   }
 }
-.person-link {
+.c-block {
   display: flex;
   &__title {
     width: 84px;
