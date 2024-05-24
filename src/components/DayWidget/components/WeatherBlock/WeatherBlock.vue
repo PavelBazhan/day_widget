@@ -64,7 +64,7 @@ const temperatureValueIsValid = computed(() => typeof props.temperatureValue ===
     </div>
     <div class="weather-block__bottom">
       <div class="weather-block__icon-wrapper">
-        <img :src="weatherTypeImgUrl" v-show="weatherCode" />
+        <img :src="weatherTypeImgUrl" v-show="weatherCode || weatherCode === 0" />
       </div>
     </div>
   </div>

@@ -6,6 +6,14 @@ import DateAndWeather from './components/DateAndWeather.vue';
 import Dictionary from './components/Dictionary.vue';
 import ActionPanel from './components/ActionPanel.vue';
 import WEATHER_BLOCK_CONSTANTS from './components/WeatherBlock/constants.js';
+import LOCAL_CONSTANTS from './constants.js';
+
+const props = defineProps({
+  theme: {
+    type: String,
+    default: LOCAL_CONSTANTS.THEME.DARK,
+  },
+});
 
 const generalTimerData = reactive({
   jsDate: null,
@@ -184,6 +192,7 @@ runGeneralTimer();
 
 <template>
   <div class="day-widget">
+    <pre>theme: {{ theme }}</pre>
     <TimeClock
       class="day-widget__clock"
       :hours="generalTimerData.hours"
@@ -208,10 +217,8 @@ runGeneralTimer();
 .day-widget {
   backdrop-filter: blur(8px);
   width: 360px;
-  // height: 535px;
   border-radius: 16px;
   padding: 16px;
-  background: rgb(255,255,255);
   background: linear-gradient(138deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.02) 100%);
   font-family: "SF Pro";
   color: #ECFEFF;
