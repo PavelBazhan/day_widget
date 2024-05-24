@@ -82,9 +82,9 @@ const setDayWidgetTheme = (theme) => {
   padding: 12px 36px;
   display: flex;
   justify-content: center;
-  background: linear-gradient(138deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.02) 100%);
+  background-color: var(--color_slotBg);
   backdrop-filter: blur(8px);
-  color: #ECFEFF;
+  color: var(--color_content);
   font-family: "SF Pro";
   &__background {
     display: flex;

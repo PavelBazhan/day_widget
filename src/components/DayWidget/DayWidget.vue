@@ -221,7 +221,7 @@ runGeneralTimer();
   padding: 16px;
   background: linear-gradient(138deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.02) 100%);
   font-family: "SF Pro";
-  color: #ECFEFF;
+  color: var(--color_content);
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;

@@ -21,7 +21,7 @@
   width: 100%;
   min-height: 112px;
   border-radius: 12px;
-  background: #3C4C5299;
+  background-color: var(--color_slotBg);
   display: flex;
   justify-content: center;
   flex-flow: column nowrap;
@@ -32,7 +32,7 @@
     width: 32px;
     height: 32px;
     font-size: 24px;
-    color: #DFB8F1;
+    color: var(--color_accent);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,7 +41,7 @@
     font-size: 24px;
     line-height: 30px;
     font-weight: 500;
-    color: #DFB8F1;
+    color: var(--color_accent);
   }
   &__translated-text-wrapper {
     font-size: 14px;

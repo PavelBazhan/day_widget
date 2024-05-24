@@ -29,7 +29,7 @@ const computedControlsOverlayButtonClass = computed(() => ({
   background-color: transparent;
   border: none;
   font-size: 16px;
-  color: #ECFEFF;
+  color: var(--color_content);
   padding: 4px 8px;
   font-size: 14px;
   line-height: 18px;

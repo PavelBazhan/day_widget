@@ -56,7 +56,7 @@ const getTwoSymbolsValue = (value) => {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #3C4C5299;
+    background-color: var(--color_slotBg);
     font-weight: 700;
     font-size: 80px;
   }
@@ -68,7 +68,7 @@ const getTwoSymbolsValue = (value) => {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background-color: #ECFEFF;
+      background-color: var(--color_content);
     }
   }
 }

@@ -79,7 +79,7 @@ const weatherForecastBlockComputedClass = computed(() => ({
 .day-widget-day-and-weather {
   width: 100%;
   border-radius: 12px;
-  background: #3C4C5299;
+  background-color: var(--color_slotBg);
   padding: 16px 0;
   display: flex;
   flex-flow: column nowrap;
@@ -98,7 +98,7 @@ const weatherForecastBlockComputedClass = computed(() => ({
 .weather-block-wrapper,
 .weather-block-error {
   height: 136px;
-  background-color: #22343A99;
+  background-color: var(--color_weatherBg);
   display: flex;
   justify-content: space-between;
   align-items: stretch;
@@ -117,10 +117,10 @@ const weatherForecastBlockComputedClass = computed(() => ({
   align-items: center;
   min-height: 19px;
   &_cold {
-    color: #9AC8EA;
+    color: var(--color_cold);
   }
   &_warm {
-    color: #F6D972;
+    color: var(--color_warm);
   }
 }
 </style>

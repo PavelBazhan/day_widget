@@ -17,7 +17,8 @@ div, p {
 a,
 a:visited,
 a:link {
-  color: #ECFEFF;
+  color: var(--color_content);
+  transition: color 0.05s;
 }
 
 body {
@@ -37,37 +38,8 @@ body {
   align-items: center;
 }
 
-@for $i from 1 through 8 {
-  .ma-#{$i} {
-    margin: $i * 4px;
-  }
-  .mt-#{$i} {
-    margin-top: $i * 4px;
-  }
-  .mr-#{$i} {
-    margin-right: $i * 4px;
-  }
-  .mb-#{$i} {
-    margin-bottom: $i * 4px;
-  }
-  .ml-#{$i} {
-    margin-left: $i * 4px;
-  }
-  .pa-#{$i} {
-    padding: $i * 4px;
-  }
-  .pt-#{$i} {
-    padding-top: $i * 4px;
-  }
-  .pr-#{$i} {
-    padding-right: $i * 4px;
-  }
-  .pb-#{$i} {
-    padding-bottom: $i * 4px;
-  }
-  .pl-#{$i} {
-    padding-left: $i * 4px;
-  }
+* {
+  transition: color 0.05s, background-color 0.05s;
 }
 
 @font-face {
@@ -121,4 +93,38 @@ body {
 }
 .icon-search:before {
   content: "\e905";
+}
+
+// helpers
+@for $i from 1 through 8 {
+  .ma-#{$i} {
+    margin: $i * 4px;
+  }
+  .mt-#{$i} {
+    margin-top: $i * 4px;
+  }
+  .mr-#{$i} {
+    margin-right: $i * 4px;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i * 4px;
+  }
+  .ml-#{$i} {
+    margin-left: $i * 4px;
+  }
+  .pa-#{$i} {
+    padding: $i * 4px;
+  }
+  .pt-#{$i} {
+    padding-top: $i * 4px;
+  }
+  .pr-#{$i} {
+    padding-right: $i * 4px;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i * 4px;
+  }
+  .pl-#{$i} {
+    padding-left: $i * 4px;
+  }
 }
