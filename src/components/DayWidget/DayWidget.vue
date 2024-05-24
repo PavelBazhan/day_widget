@@ -192,7 +192,7 @@ runGeneralTimer();
 
 <template>
   <div class="day-widget">
-    <pre>theme: {{ theme }}</pre>
+    <!-- <pre>theme: {{ theme }}</pre> -->
     <TimeClock
       class="day-widget__clock"
       :hours="generalTimerData.hours"
