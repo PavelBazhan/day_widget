@@ -160,4 +160,19 @@ const LABEL_COLLECTION = {
     justify-content: space-between;
   }
 }
+
+@media screen and (max-width: 600px) {
+  .controls-overlay {
+    height: 180px;
+    &__background {
+      flex-flow: column nowrap;
+      align-items: flex-start;
+      justify-content: start;
+      width: auto;
+      .c-block {
+        margin-bottom: 4px;
+      }
+    }
+  }
+}
 </style>

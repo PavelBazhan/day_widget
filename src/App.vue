@@ -61,7 +61,6 @@ const getLanguage = computed(() => {
 const currentLanguage = ref(getLanguage.value);
 
 const setLanguage = (languageCode) => {
-  console.log('setLanguage: ', languageCode);
   currentLanguage.value = languageCode;
   if (!window.localStorage) {
     return;
@@ -103,11 +102,12 @@ provide('currentLanguage', currentLanguage);
 .widget-wrapper {
   background-size: cover;
   background-position: center center;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 16px;
   &_theme {
     &_dark {
       background-image: url('@/assets/background-dark.jpg');
@@ -122,5 +122,10 @@ provide('currentLanguage', currentLanguage);
   left: 0;
   bottom: 0;
   right: 0;
+}
+@media screen and (max-width: 600px) {
+  .widget-wrapper  {
+    min-height: calc(100vh - 160px);
+  }
 }
 </style>

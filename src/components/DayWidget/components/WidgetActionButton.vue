@@ -27,17 +27,21 @@ const iconComputedClass = computed(() => {
 
 <style scoped lang="scss">
 .widget-action-button {
-  display: block;
+  width: 100%;
+  height: 48px;
   background-color: var(--color_slotBg);
   border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: none;
   font-size: 24px;
   color: var(--color_contentTp);
   border: 2px solid transparent;
   transition: all 0.1s ease;
+  .icon {
+    width: 24px;
+    height: 24px;
+  }
   &:hover {
     border-color: var(--color_contentTp);
     cursor: pointer;
