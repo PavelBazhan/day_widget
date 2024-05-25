@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import LOCAL_CONSTANTS from './constants.js';
 
 const props = defineProps({
@@ -25,6 +25,8 @@ const props = defineProps({
   },
 });
 
+const getLocaleValue = inject('getLocaleValue');
+
 const dayTimeLocaleString = computed(() => {
   if (!props.dayTime) {
     return null;
@@ -33,7 +35,7 @@ const dayTimeLocaleString = computed(() => {
   if (!foundDayTimeObject) {
     return null;
   }
-  return foundDayTimeObject.localeValues[1]; // <- need to fix that stuff
+  return getLocaleValue(foundDayTimeObject);
 });
 
 const weatherTypeImgUrl = computed(() => {

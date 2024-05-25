@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import WeatherBlock from './WeatherBlock/WeatherBlock.vue';
 
 const props = defineProps({
@@ -20,6 +20,8 @@ const props = defineProps({
     default: false,
   },
 });
+
+const getLocaleValue = inject('getLocaleValue');
 
 const slicedWeather = computed(() => {
   if (!Array.isArray(props.weather)) {
@@ -45,6 +47,17 @@ const weatherForecastBlockComputedClass = computed(() => ({
   'weather-forecast-block_cold': tomorrowWillBeColder?.value,
   'weather-forecast-block_warm': !tomorrowWillBeColder?.value,
 }));
+
+const predictionCollection = [
+  {
+    _code: 'CODLER',
+    localeValues: [ 'tomorrow it will be colder', 'завтра будет прохладнее' ],
+  },
+  {
+    _code: 'WARMER',
+    localeValues: [ 'tomorrow it will be warmer', 'завтра будет теплее' ],
+  },
+];
 </script>
 
 <template>
@@ -84,8 +97,8 @@ const weatherForecastBlockComputedClass = computed(() => ({
     >
       <Transition name="fs">
         <div v-if="tomorrowInfo && !connectionPending">
-          <span v-show="tomorrowWillBeColder">завтра будет прохладнее</span>
-          <span v-show="!tomorrowWillBeColder">завтра будет теплее</span>
+          <span v-show="tomorrowWillBeColder">{{ getLocaleValue(predictionCollection[0]) }}</span>
+          <span v-show="!tomorrowWillBeColder">{{ getLocaleValue(predictionCollection[1]) }}</span>
         </div>
       </Transition>
     </div>

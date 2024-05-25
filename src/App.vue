@@ -2,7 +2,7 @@
 import DayWidget from './components/DayWidget/DayWidget.vue';
 import TheControlsOverlay from './components/TheControlsOverlay/TheControlsOverlay.vue';
 import DAY_WIDGET_CONSTANTS from './components/DayWidget/constants.js';
-import { ref, computed } from 'vue';
+import { ref, computed, provide } from 'vue';
 import CONSTANTS from './constants.js';
 
 const setThemeColorCodesToBody = (theme) => {
@@ -36,10 +36,6 @@ const getDayWidgetTheme = computed(() => {
 
 const currentTheme = ref(getDayWidgetTheme.value);
 
-const setLanguage = (languageCode) => {
-  console.log('setLanguage: ', languageCode);
-}
-
 const setDayWidgetTheme = (theme) => {
   currentTheme.value = theme;
   if (!window.localStorage) {
@@ -49,19 +45,54 @@ const setDayWidgetTheme = (theme) => {
   localStorage.setItem('theme', theme);
 }
 
+const getLanguage = computed(() => {
+  if (!window.localStorage) {
+    return CONSTANTS.LANGUAGE.RU;
+  }
+  const languageFromLS = window.localStorage.getItem('language');
+  if (languageFromLS) {
+    return languageFromLS;
+  }
+  const defaultLanguage = CONSTANTS.LANGUAGE.RU;
+  localStorage.setItem('language', defaultLanguage);
+  return defaultLanguage;
+});
+
+const currentLanguage = ref(getLanguage.value);
+
+const setLanguage = (languageCode) => {
+  console.log('setLanguage: ', languageCode);
+  currentLanguage.value = languageCode;
+  if (!window.localStorage) {
+    return;
+  }
+  localStorage.setItem('language', languageCode);
+}
+
 const computedWidgetWrapperClass = computed(() => ({
   'widget-wrapper_theme_dark': currentTheme.value === DAY_WIDGET_CONSTANTS.THEME.DARK,
   'widget-wrapper_theme_light': currentTheme.value === DAY_WIDGET_CONSTANTS.THEME.LIGHT,
 }));
+
+provide('getLocaleValue', (multilocaleObject) => {
+  let index = Object.keys(CONSTANTS.LANGUAGE).findIndex((l) => CONSTANTS.LANGUAGE[l] === currentLanguage.value);
+  if (index === -1) {
+    index = 0;
+  }
+  return multilocaleObject.localeValues[index];
+});
+
+provide('currentLanguage', currentLanguage);
 </script>
 
 <template>
   <div class="widget-wrapper" :class="computedWidgetWrapperClass">
-    <DayWidget :theme="currentTheme"/>
+    <DayWidget :theme="currentTheme" :language="currentLanguage"/>
   </div>
   <div class="controls-overlay-wrapper">
     <TheControlsOverlay
       :currentTheme="currentTheme"
+      :currentLanguage="currentLanguage"
       @setLanguage="setLanguage"
       @setDayWidgetTheme="setDayWidgetTheme"
     />

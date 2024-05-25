@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, inject } from 'vue';
 import axios from 'axios';
 import TimeClock from './components/TimeClock.vue';
 import DateAndWeather from './components/DateAndWeather.vue';
@@ -14,6 +14,8 @@ const props = defineProps({
     default: LOCAL_CONSTANTS.THEME.DARK,
   },
 });
+
+const currentLanguage = inject('currentLanguage');
 
 const generalTimerData = reactive({
   jsDate: null,
@@ -165,7 +167,7 @@ const generalTimerTickHandler = (log) => {
   generalTimerData.hours = date.getHours();
   generalTimerData.minutes = date.getMinutes();
   generalTimerData.seconds = date.getSeconds();
-  generalTimerData.todayString = date.toLocaleString('ru', {
+  generalTimerData.todayString = date.toLocaleString(currentLanguage.value, {
     month: "long",
     day: "numeric",
   });
@@ -217,8 +219,6 @@ runGeneralTimer();
     />
     <Dictionary />
     <ActionPanel />
-
-    <!-- <button @click="generalTimerTickHandler(true)">tick</button> -->
   </div>
 </template>
 

@@ -35,11 +35,11 @@ const iconComputedClass = computed(() => {
   align-items: center;
   border: none;
   font-size: 24px;
-  color: var(--color_content);
+  color: var(--color_contentTp);
   border: 2px solid transparent;
   transition: all 0.1s ease;
   &:hover {
-    border-color: var(--color_content);
+    border-color: var(--color_contentTp);
     cursor: pointer;
   }
   &:active {

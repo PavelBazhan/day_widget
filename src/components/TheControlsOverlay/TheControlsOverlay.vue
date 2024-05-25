@@ -1,4 +1,5 @@
 <script setup>
+import { inject } from 'vue';
 import ControlsOverlayButton from './components/ControlsOverlayButton.vue';
 
 const props = defineProps({
@@ -6,19 +7,64 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  currentLanguage: {
+    type: String,
+    default: null,
+  },
 });
 
 const emit = defineEmits([ 'setLanguage', 'setDayWidgetTheme' ]);
 
-const themeIsSelected = (theme) => theme === props.currentTheme;
+const getLocaleValue = inject('getLocaleValue');
 
 const setLanguage = (languageCode) => {
+  if (languageCode === props.currentLanguage) {
+    return;
+  }
   emit('setLanguage', languageCode);
 }
 
+const themeIsSelected = (theme) => theme === props.currentTheme;
+
 const setDayWidgetTheme = (theme) => {
+  if (themeIsSelected(theme)) {
+    return;
+  }
   emit('setDayWidgetTheme', theme);
 }
+
+const LABEL_COLLECTION = {
+  DEVELOPMENT: {
+    localeValues: [ 'Development:', 'Разработка:' ],
+  },
+  DEVELOPER: {
+    localeValues: [ 'Pavel Bazhan', 'Павел Бажан' ],
+  },
+  DESIGN: {
+    localeValues: [ 'Design:', 'Дизайн:' ],
+  },
+  DESIGNER: {
+    localeValues: [ 'Natalia Shishkina', 'Наталия Шишкина' ],
+  },
+  LANGUAGE: {
+    localeValues: [ 'Language:', 'Язык:' ],
+  },
+  LANGUAGE_EN: {
+    localeValues: [ 'English', 'Английский' ],
+  },
+  LANGUAGE_RU: {
+    localeValues: [ 'Russian', 'Русский' ],
+  },
+  THEME: {
+    localeValues: [ 'Theme:', 'Тема:' ],
+  },
+  THEME_DARK: {
+    localeValues: [ 'Dark', 'Тёмная' ],
+  },
+  THEME_LIGHT: {
+    localeValues: [ 'Light', 'Светлая' ],
+  },
+};
 </script>
 
 <template>
@@ -26,42 +72,31 @@ const setDayWidgetTheme = (theme) => {
     <div class="controls-overlay__background">
       <div class="controls-overlay__author-block">
         <div class="c-block">
-          <div class="c-block__title">Разработка:</div>
+          <div class="c-block__title">{{ getLocaleValue(LABEL_COLLECTION.DEVELOPMENT) }}</div>
           <div>
-            <a target="_blank" href="https://github.com/PavelBazhan/">Павел Бажан</a>
+            <a target="_blank" href="https://github.com/PavelBazhan/">{{ getLocaleValue(LABEL_COLLECTION.DEVELOPER) }}</a>
           </div>
         </div>
         <div class="c-block">
-          <div class="c-block__title">Дизайн:</div>
+          <div class="c-block__title">{{ getLocaleValue(LABEL_COLLECTION.DESIGN) }}</div>
           <div>
-            <a target="_blank" href="https://nataliia-shishkina.ru/">Наталия Шишкина</a>
+            <a target="_blank" href="https://nataliia-shishkina.ru/">{{ getLocaleValue(LABEL_COLLECTION.DESIGNER) }}</a>
           </div>
         </div>
       </div>
       <div class="controls-overlay__controls-block">
         <div class="c-block">
-          <div class="c-block__title">Язык:</div>
+          <div class="c-block__title">{{ getLocaleValue(LABEL_COLLECTION.LANGUAGE) }}</div>
           <div>
-            <ControlsOverlayButton class="mr-1" :disabled="true" @click="setLanguage('ruRU')">Русский</ControlsOverlayButton>
-            <ControlsOverlayButton @click="setLanguage('enUS')">Английский</ControlsOverlayButton>
+            <ControlsOverlayButton class="mr-1" @click="setLanguage('en')">{{ getLocaleValue(LABEL_COLLECTION.LANGUAGE_EN) }}</ControlsOverlayButton>
+            <ControlsOverlayButton @click="setLanguage('ru')">{{ getLocaleValue(LABEL_COLLECTION.LANGUAGE_RU) }}</ControlsOverlayButton>
           </div>
         </div>
         <div class="c-block">
-          <div class="c-block__title">Тема:</div>
+          <div class="c-block__title">{{ getLocaleValue(LABEL_COLLECTION.THEME) }}</div>
           <div>
-            <ControlsOverlayButton
-              class="mr-1"
-              :disabled="themeIsSelected('DARK')"
-              @click="setDayWidgetTheme('DARK')"
-            >
-              Темная
-            </ControlsOverlayButton>
-            <ControlsOverlayButton
-              :disabled="themeIsSelected('LIGHT')"
-              @click="setDayWidgetTheme('LIGHT')"
-            >
-              Светлая
-            </ControlsOverlayButton>
+            <ControlsOverlayButton class="mr-1" @click="setDayWidgetTheme('DARK')">{{ getLocaleValue(LABEL_COLLECTION.THEME_DARK) }}</ControlsOverlayButton>
+            <ControlsOverlayButton @click="setDayWidgetTheme('LIGHT')">{{ getLocaleValue(LABEL_COLLECTION.THEME_LIGHT) }}</ControlsOverlayButton>
           </div>
         </div>
       </div>
@@ -99,7 +134,7 @@ const setDayWidgetTheme = (theme) => {
 .c-block {
   display: flex;
   &__title {
-    width: 84px;
+    width: 92px;
     margin-right: 0.5em;
     opacity: 0.7;
     text-align: right;
