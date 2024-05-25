@@ -79,7 +79,7 @@ const refreshForecastInfo = async () => {
         const gmtMonth = String(generalTimerData.jsDate.getMonth() + 1).padStart(2, '0');
         const gmtDate = String(generalTimerData.jsDate.getDate()).padStart(2, '0');
 
-        const forecastDateTimeString = `${[ gmtYear, gmtMonth, gmtDate ].join('-')}T${generalTimerData.hours}:00`;
+        const forecastDateTimeString = `${[ gmtYear, gmtMonth, gmtDate ].join('-')}T${String(generalTimerData.hours).padStart(2, '0')}:00`;
         
         const apiHourlyTime = generalTimerData.forecast.hourly?.time;
         if (!Array.isArray(apiHourlyTime)) {
