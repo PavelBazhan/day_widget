@@ -48,16 +48,24 @@ const weatherForecastBlockComputedClass = computed(() => ({
   'weather-forecast-block_warm': !tomorrowWillBeColder?.value,
 }));
 
-const predictionCollection = [
-  {
-    _code: 'CODLER',
-    localeValues: [ 'tomorrow it will be colder', 'завтра будет прохладнее' ],
+const LABEL_COLLECTION = {
+  PREDICTION: [
+    {
+      _code: 'CODLER',
+      localeValues: [ 'tomorrow it will be colder', 'завтра будет прохладнее' ],
+    },
+    {
+      _code: 'WARMER',
+      localeValues: [ 'tomorrow it will be warmer', 'завтра будет теплее' ],
+    },
+  ],
+  LOADING: {
+    localeValues: [ 'Loading...', 'Загрузка...' ],
   },
-  {
-    _code: 'WARMER',
-    localeValues: [ 'tomorrow it will be warmer', 'завтра будет теплее' ],
+  ERROR: {
+    localeValues: [ 'An error has occurred', 'Произошла ошибка' ],
   },
-];
+};
 </script>
 
 <template>
@@ -69,12 +77,12 @@ const predictionCollection = [
     <div class="weather-block-wrapper">
       <Transition name="fsi">
         <div class="weather-block-pending" v-if="connectionPending">
-          <span>Загрузка...</span>
+          <span>{{ getLocaleValue(LABEL_COLLECTION.LOADING) }}</span>
         </div>
       </Transition>
       <Transition name="fs">
         <div class="weather-block-error" v-if="!connectionPending && connectionError">
-          <span>Произошла ошибка</span>
+          <span>{{ getLocaleValue(LABEL_COLLECTION.ERROR) }}</span>
         </div>
       </Transition>
       <Transition name="fs">
@@ -97,8 +105,8 @@ const predictionCollection = [
     >
       <Transition name="fs">
         <div v-if="tomorrowInfo && !connectionPending">
-          <span v-show="tomorrowWillBeColder">{{ getLocaleValue(predictionCollection[0]) }}</span>
-          <span v-show="!tomorrowWillBeColder">{{ getLocaleValue(predictionCollection[1]) }}</span>
+          <span v-show="tomorrowWillBeColder">{{ getLocaleValue(LABEL_COLLECTION.PREDICTION[0]) }}</span>
+          <span v-show="!tomorrowWillBeColder">{{ getLocaleValue(LABEL_COLLECTION.PREDICTION[1]) }}</span>
         </div>
       </Transition>
     </div>
