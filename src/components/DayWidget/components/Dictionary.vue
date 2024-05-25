@@ -1,5 +1,41 @@
 <script setup>
+import { reactive, computed } from 'vue';
 
+const phraseCollection = reactive([
+  {
+    en: 'jump at the opportunity',
+    ru: 'воспользоваться возможностью',
+  },
+  {
+    en: 'give somebody an edge',
+    ru: 'давать преимущество',
+  },
+  {
+    en: 'trials and tribulations',
+    ru: 'испытания и невзгоды',
+  },
+  {
+    en: 'in the blink of an eye',
+    ru: 'в мгновение ока',
+  },
+{
+    en: 'get goosebumps',
+    ru: 'мурашки по коже',
+  },
+{
+    en: 'go to pieces',
+    ru: 'терять присутствие духа',
+  },
+{
+    en: 'reinvent the wheel',
+    ru: 'изобретать велосипед',
+  },
+]);
+
+const phrase = computed(() => {
+  const index = Math.floor(Math.random() * phraseCollection.length);
+  return phraseCollection[index];
+});
 </script>
 
 <template>
@@ -8,10 +44,10 @@
       <div class="icon icon-handbook"></div>
     </div>
     <div class="day-widget-dictionary__original-text-wrapper">
-      <span>give somebody an edge</span>
+      <span>{{ phrase.en }}</span>
     </div>
     <div class="day-widget-dictionary__translated-text-wrapper">
-      <span>давать преимущество</span>
+      <span>{{ phrase.ru }}</span>
     </div>
   </div>
 </template>

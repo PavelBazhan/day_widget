@@ -40,25 +40,23 @@ const setDayWidgetTheme = (theme) => {
       </div>
       <div class="controls-overlay__controls-block">
         <div class="c-block">
-          <div class="c-block__title">Тема:</div>
+          <div class="c-block__title">Язык:</div>
           <div>
-            <ControlsOverlayButton class="mr-1" :selected="true" :disabled="true" @click="setLanguage('ruRU')">Ру</ControlsOverlayButton>
-            <ControlsOverlayButton @click="setLanguage('enUS')">Англ</ControlsOverlayButton>
+            <ControlsOverlayButton class="mr-1" :disabled="true" @click="setLanguage('ruRU')">Русский</ControlsOverlayButton>
+            <ControlsOverlayButton @click="setLanguage('enUS')">Английский</ControlsOverlayButton>
           </div>
         </div>
         <div class="c-block">
-          <div class="c-block__title">Язык:</div>
+          <div class="c-block__title">Тема:</div>
           <div>
             <ControlsOverlayButton
               class="mr-1"
-              :selected="themeIsSelected('DARK')"
               :disabled="themeIsSelected('DARK')"
               @click="setDayWidgetTheme('DARK')"
             >
               Темная
             </ControlsOverlayButton>
             <ControlsOverlayButton
-              :selected="themeIsSelected('LIGHT')"
               :disabled="themeIsSelected('LIGHT')"
               @click="setDayWidgetTheme('LIGHT')"
             >
