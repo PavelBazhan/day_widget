@@ -15,6 +15,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  connectionPending: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const slicedWeather = computed(() => {
@@ -48,29 +52,42 @@ const weatherForecastBlockComputedClass = computed(() => ({
     <div class="date-block">
       {{ todayString }}
     </div>
-    <div class="weather-block-wrapper" v-if="!connectionError">
-      <template v-if="weather">
-        <WeatherBlock
-          v-for="(weatherBlock, index) in slicedWeather"
-          :key="index"
-          :big="index === 1"
-          :day-time="weatherBlock?.dayTimeCode"
-          :temperature-value="weatherBlock?.temperature"
-          :weather-code="weatherBlock?.weatherCode"
-        />
-      </template>
+
+    <div class="weather-block-wrapper">
+      <Transition name="fsi">
+        <div class="weather-block-pending" v-if="connectionPending">
+          <span>Загрузка...</span>
+        </div>
+      </Transition>
+      <Transition name="fs">
+        <div class="weather-block-error" v-if="!connectionPending && connectionError">
+          <span>Произошла ошибка</span>
+        </div>
+      </Transition>
+      <Transition name="fs">
+        <div class="weather-block-container" v-if="!connectionPending && !connectionError && weather">
+          <WeatherBlock
+            v-for="(weatherBlock, index) in slicedWeather"
+            :key="index"
+            :big="index === 1"
+            :day-time="weatherBlock?.dayTimeCode"
+            :temperature-value="weatherBlock?.temperature"
+            :weather-code="weatherBlock?.weatherCode"
+          />
+        </div>
+      </Transition>
     </div>
-    <div class="weather-block-error" v-else>
-      <span>Connection Error</span>
-    </div>
+    
     <div
       class="weather-forecast-block"
       :class="weatherForecastBlockComputedClass"
     >
-      <template v-if="tomorrowInfo">
-        <span v-show="tomorrowWillBeColder">завтра будет прохладнее</span>
-        <span v-show="!tomorrowWillBeColder">завтра будет теплее</span>
-      </template>
+      <Transition name="fs">
+        <div v-if="tomorrowInfo && !connectionPending">
+          <span v-show="tomorrowWillBeColder">завтра будет прохладнее</span>
+          <span v-show="!tomorrowWillBeColder">завтра будет теплее</span>
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -95,22 +112,33 @@ const weatherForecastBlockComputedClass = computed(() => ({
   font-weight: 500;
   min-height: 58px;
 }
-.weather-block-wrapper,
-.weather-block-error {
+
+.weather-block-wrapper {
   height: 136px;
   background-color: var(--color_weatherBg);
+  position: relative;
+}
+.weather-block-error,
+.weather-block-pending {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > span {
+    opacity: 0.3;
+  }
+}
+.weather-block-container {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   padding: 8px 24px;
 }
-.weather-block-error  {
-  justify-content: center;
-  align-items: center;
-  & > span {
-    opacity: 0.5;
-  }
-}
+
 .weather-forecast-block {
   display: flex;
   justify-content: center;
@@ -122,5 +150,22 @@ const weatherForecastBlockComputedClass = computed(() => ({
   &_warm {
     color: var(--color_warm);
   }
+}
+
+$animationTime: 0.2s;
+$animationScale: 85%;
+
+.fsi-enter-active,
+.fsi-leave-active,
+.fs-enter-active,
+.fs-leave-active {
+  transition: opacity $animationTime ease, transform $animationTime ease;
+}
+
+.fs-enter-from,
+.fsi-leave-to,
+.fs-leave-to {
+  opacity: 0;
+  transform: scale($animationScale);
 }
 </style>

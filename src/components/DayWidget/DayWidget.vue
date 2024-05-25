@@ -23,6 +23,8 @@ const generalTimerData = reactive({
   todayString: null,
   forecast: null,
   weather: [ null, null, null, ],
+  connectionPending: false,
+  connectionFirstTime: true,
   connectionError: false,
   tickAmount: 0,
 });
@@ -66,6 +68,8 @@ const refreshForecastInfo = async () => {
       };
       const forecastResponse = await axios.get('https://api.open-meteo.com/v1/forecast', forecastApiRequest);
       if (forecastResponse.status === 200) {
+        generalTimerData.connectionFirstTime = false;
+        generalTimerData.connectionPending = false;
         generalTimerData.connectionError = false;
         generalTimerData.forecast = forecastResponse.data;
 
@@ -138,13 +142,18 @@ const refreshForecastInfo = async () => {
 
       }
     } catch (error) {
+      generalTimerData.connectionPending = false;
       generalTimerData.connectionError = true;
       throw error;
     }
   };
 
+  if (generalTimerData.connectionFirstTime) {
+    generalTimerData.connectionPending = true;
+  }
   navigator.geolocation.getCurrentPosition(getDataFromApi, ((error) => {
     generalTimerData.connectionError = true;
+    generalTimerData.connectionPending = false;
     throw error;
   })); 
 };
@@ -163,7 +172,6 @@ const generalTimerTickHandler = (log) => {
 
   // Getting forecast
   if (generalTimerData.tickAmount === 0 || (generalTimerData.tickAmount % (4 * 60)) === 0) {
-    console.log('Public Forecast Api Request Tick');
     // ticks every minute
     refreshForecastInfo();
   }
@@ -202,6 +210,7 @@ runGeneralTimer();
     />
     <DateAndWeather
       class="day-widget__date-and-weather"
+      :connectionPending="generalTimerData.connectionPending"
       :todayString="generalTimerData.todayString"
       :connectionError="generalTimerData.connectionError"
       :weather="generalTimerData.weather"

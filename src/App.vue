@@ -6,12 +6,10 @@ import { ref, computed } from 'vue';
 import CONSTANTS from './constants.js';
 
 const setThemeColorCodesToBody = (theme) => {
-  console.log('CONSTANTS: ', CONSTANTS);
   let currentThemeColorCollection = CONSTANTS.COLOR_COLLECTION[theme];
   if (!currentThemeColorCollection) {
     currentThemeColorCollection = CONSTANTS.COLOR_COLLECTION[DAY_WIDGET_CONSTANTS.THEME.DARK];
   }
-  console.log('currentThemeColorCollection: ', currentThemeColorCollection);
   const body = document.querySelector('body');
   body.style = '';
   const bodyStyleArray = [];
@@ -19,7 +17,6 @@ const setThemeColorCodesToBody = (theme) => {
     bodyStyleArray.push(`--color_${colorKey}: ${currentThemeColorCollection[colorKey]}`);
   });
   body.style = bodyStyleArray.join('; ');
-  console.log('body: ', body);
 };
 
 const getDayWidgetTheme = computed(() => {
